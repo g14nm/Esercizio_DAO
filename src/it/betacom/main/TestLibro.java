@@ -20,32 +20,32 @@ public class TestLibro {
 		System.out.println("---------------------------");
 		stampaLibri(libroDao.getAll());
 		
-		//stampiamo i dati del libro richiesto
-		System.out.println("---------------------------");
-		int codiceL = 1;
-		Libro libro = libroDao.getById(codiceL);
-		if(libro != null) {
-			System.out.println("Libro richiesto -> " + libro.toString());
-		}
-		else
-			System.out.println("Non è presente nessun libro con il codiceL indicato!");
-		
-		//stampiamo l'esito dell'inserimento e stampiamo la lista libri
-		System.out.println("---------------------------");
-		libroDao.insert(carrie);
-		stampaLibri(libroDao.getAll());
-		
-		//stampiamo l'esito dell'aggiornamento (es: cambiare editore) stampiamo la lista libri
-		System.out.println("---------------------------");
-		carrie.setCodiceE(2);
-		libroDao.update(carrie);
-		stampaLibri(libroDao.getAll());
-		
-		//stampiamo l'esito del delete libro e stampare la lista libri
-		System.out.println("---------------------------");
-		libroDao.deleteById(carrie.getCodiceL());
-		stampaLibri(libroDao.getAll());
-		
+//		//stampiamo i dati del libro richiesto
+//		System.out.println("---------------------------");
+//		int codiceL = 1;
+//		Libro libro = libroDao.getById(codiceL);
+//		if(libro != null) {
+//			System.out.println("Libro richiesto -> " + libro.toString());
+//		}
+//		else
+//			System.out.println("Non è presente nessun libro con il codiceL indicato!");
+//		
+//		//stampiamo l'esito dell'inserimento e stampiamo la lista libri
+//		System.out.println("---------------------------");
+//		libroDao.insert(carrie);
+//		stampaLibri(libroDao.getAll());
+//		
+//		//stampiamo l'esito dell'aggiornamento (es: cambiare editore) stampiamo la lista libri
+//		System.out.println("---------------------------");
+//		carrie.setCodiceE(2);
+//		libroDao.update(carrie);
+//		stampaLibri(libroDao.getAll());
+//		
+//		//stampiamo l'esito del delete libro e stampare la lista libri
+//		System.out.println("---------------------------");
+//		libroDao.deleteById(carrie.getCodiceL());
+//		stampaLibri(libroDao.getAll());
+//		
 		//salva lista libri su file txt
 		System.out.println("---------------------------");
 		libroPrintService.saveListAsTxt();

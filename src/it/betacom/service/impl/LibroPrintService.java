@@ -77,7 +77,7 @@ public class LibroPrintService implements PrintService<Libro> {
 	@Override
 	public void saveAsPdf(Libro libro) {
 		try {
-			PdfDocument pdf = new PdfDocument(new PdfWriter(OUTPUT_DIRECTORY + "Libro - " + libro.getTitolo() + ".pdf"));
+			PdfDocument pdf = new PdfDocument(new PdfWriter(OUTPUT_DIRECTORY + "Libro - " + libro.getTitolo() + " - " + libro.getNomeAutore() + " " + libro.getCognomeAutore() + ".pdf"));
 			Document document = new Document(pdf);
 			document.add(new Paragraph(libro.toString()));
 			document.close();
@@ -99,7 +99,7 @@ public class LibroPrintService implements PrintService<Libro> {
 	public void saveAsTxt(Libro libro) {
 		BufferedWriter writer = null;
 		try {
-			writer = new BufferedWriter(new FileWriter(OUTPUT_DIRECTORY + "Libro - " + libro.getTitolo() + ".txt"));
+			writer = new BufferedWriter(new FileWriter(OUTPUT_DIRECTORY + "Libro - " + libro.getTitolo() + " - " + libro.getNomeAutore() + " " + libro.getCognomeAutore() + ".txt"));
 			writer.write(libro.toString());
 			logger.debug("generato file txt libro con codiceA : " + libro.getCodiceA());
 			System.out.println("Generato file txt con il libro specificato");

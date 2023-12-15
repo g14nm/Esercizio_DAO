@@ -1,5 +1,6 @@
 package it.betacom.dao.impl;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +11,13 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import it.betacom.dao.AutoreDao;
+import it.betacom.dao.EditoreDao;
+import it.betacom.dao.GenereDao;
 import it.betacom.dao.LibroDao;
+import it.betacom.model.Autore;
+import it.betacom.model.Editore;
+import it.betacom.model.Genere;
 import it.betacom.model.Libro;
 
 public class LibroDaoImpl implements LibroDao {
@@ -22,23 +29,46 @@ public class LibroDaoImpl implements LibroDao {
 	public List<Libro> getAll() {
 		Statement statement = null;
 		ResultSet resultSet = null;
+		ResultSet resultSetAutore = null;
+		ResultSet resultSetGenere = null;
+		ResultSet resultSetEditore = null;
+		AutoreDao autoreDao = new AutoreDaoImpl();
+		GenereDao genereDao = new GenereDaoImpl();
+		EditoreDao editoreDao = new EditoreDaoImpl();
 		try {
-			statement = DBHandler.getInstance().getConnessione().createStatement();
+			Connection connection = DBHandler.getInstance().getConnessione();
+			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM libri");
 			List<Libro> libri = new ArrayList<Libro>();
 			while(resultSet.next()) {
-				libri.add(new Libro(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getInt(7)));
+				Libro libro = new Libro();
+				libro.setCodiceL(resultSet.getInt("codiceL"));
+				libro.setTitolo(resultSet.getString("titolo"));
+				libro.setNumPag(resultSet.getInt("numPag"));
+				libro.setAnno(resultSet.getInt("anno"));
+				Autore autore = autoreDao.getById(resultSet.getInt("codiceA"));
+				Genere genere = genereDao.getById(resultSet.getInt("codiceG"));
+				Editore editore = editoreDao.getById(resultSet.getInt("codiceE"));
+				libro.setNomeAutore(autore.getNome());
+				libro.setCognomeAutore(autore.getCognome());
+				libro.setGenere(genere.getDescrizione());
+				libro.setEditore(editore.getNome());
+				libri.add(libro);
 			}
 			return libri;
 		}
 		catch (SQLException e) {
 			logger.error(e.getMessage());
 			System.out.println(ERRORE);
+			e.printStackTrace();
 			return null;
 		}
 		finally {
 			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			if(resultSet != null) try {resultSet.close();} catch (SQLException e) {logger.error(e.getMessage());}
+			if(resultSetAutore != null) try {resultSetAutore.close();} catch (SQLException e) {logger.error(e.getMessage());}
+			if(resultSetGenere != null) try {resultSetGenere.close();} catch (SQLException e) {logger.error(e.getMessage());}
+			if(resultSetEditore != null) try {resultSetEditore.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			DBHandler.getInstance().chiudiConnessione();
 		}
 	}
@@ -47,11 +77,27 @@ public class LibroDaoImpl implements LibroDao {
 	public Libro getById(int codiceL) {
 		Statement statement = null;
 		ResultSet resultSet = null;
+		AutoreDao autoreDao = new AutoreDaoImpl();
+		GenereDao genereDao = new GenereDaoImpl();
+		EditoreDao editoreDao = new EditoreDaoImpl();
 		try {
 			statement = DBHandler.getInstance().getConnessione().createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM libri WHERE codiceL = " + codiceL);
-			if(resultSet.next())
-				return new Libro(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getInt(5), resultSet.getInt(6), resultSet.getInt(7));
+			if(resultSet.next()) {
+				Libro libro = new Libro();
+				libro.setCodiceL(resultSet.getInt("codiceL"));
+				libro.setTitolo(resultSet.getString("titolo"));
+				libro.setNumPag(resultSet.getInt("numPag"));
+				libro.setAnno(resultSet.getInt("anno"));
+				Autore autore = autoreDao.getById(resultSet.getInt("codiceA"));
+				Genere genere = genereDao.getById(resultSet.getInt("codiceG"));
+				Editore editore = editoreDao.getById(resultSet.getInt("codiceE"));
+				libro.setNomeAutore(autore.getNome());
+				libro.setCognomeAutore(autore.getCognome());
+				libro.setGenere(genere.getDescrizione());
+				libro.setEditore(editore.getNome());
+				return libro;
+			}
 			return null;
 		}
 		catch (SQLException e) {
