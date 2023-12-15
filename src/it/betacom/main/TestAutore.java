@@ -14,36 +14,36 @@ public class TestAutore {
 		AutoreDao autoreDao = new AutoreDaoImpl();
 		PrintService<Autore> autorePrintService = new AutorePrintService();
 		
-//		Autore mdc = new Autore("Miguel", "de Cervantes", 1547, 1616, 'm', "Spagnaa");
-//		
-//		//stampiamo la lista degli autori presenti su Db
-//		System.out.println("---------------------------");
-//		stampaAutori(autoreDao.getAll());
-//		
-//		//stampiamo i dati dell' autore richiesto
-//		System.out.println("---------------------------");
-//		int codiceA = 1;
-//		Autore autore = autoreDao.getById(codiceA);
-//		if(autore != null)
-//			System.out.println("Autore richiesto -> " + autore.toString());
-//		else
-//			System.out.println("Non è presente nessun autore con il codiceA indicato!");
-//		
-//		//stampiamo l'esito dell'inserimento e stampiamo la lista
-//		System.out.println("---------------------------");
-//		autoreDao.insert(mdc);
-//		stampaAutori(autoreDao.getAll());
-//		
-//		//stampiamo l'esito dell'aggiornamento (es: cambiare nazione) stampiamo la lista
-//		System.out.println("---------------------------");
-//		mdc.setNazione("Spagna");
-//		autoreDao.update(mdc);
-//		stampaAutori(autoreDao.getAll());
-//		
-//		//stampiamo l'esito del delete e stampare la lista
-//		System.out.println("---------------------------");
-//		autoreDao.deleteById(mdc.getCodiceA());
-//		stampaAutori(autoreDao.getAll());
+		Autore mdc = new Autore("Miguel", "de Cervantes", 1547, 1616, 'm', "Spagnaa");
+		
+		//stampiamo la lista degli autori presenti su Db
+		System.out.println("---------------------------");
+		stampaAutori(autoreDao.getAll());
+		
+		//stampiamo i dati dell' autore richiesto
+		System.out.println("---------------------------");
+		int codiceA = 1;
+		Autore autore = autoreDao.getById(codiceA);
+		if(autore != null)
+			System.out.println("Autore richiesto -> " + autore.toString());
+		else
+			System.out.println("Non è presente nessun autore con il codiceA indicato!");
+		
+		//stampiamo l'esito dell'inserimento e stampiamo la lista
+		System.out.println("---------------------------");
+		autoreDao.insert(mdc);
+		stampaAutori(autoreDao.getAll());
+		
+		//stampiamo l'esito dell'aggiornamento (es: cambiare nazione) stampiamo la lista
+		System.out.println("---------------------------");
+		mdc.setNazione("Spagna");
+		autoreDao.update(mdc);
+		stampaAutori(autoreDao.getAll());
+		
+		//stampiamo l'esito del delete e stampare la lista
+		System.out.println("---------------------------");
+		autoreDao.deleteById(mdc.getCodiceA());
+		stampaAutori(autoreDao.getAll());
 		
 		//salva lista autori su file txt
 		System.out.println("---------------------------");
