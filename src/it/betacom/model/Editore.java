@@ -5,10 +5,12 @@ public class Editore {
 	private int codiceE;
 	private String nome;
 	
+	//costruttore senza id per l'inserimento nel db
 	public Editore(String nome) {
 		this.nome = nome;
 	}
 	
+	//costruttore per l'estrazione dal db con id
 	public Editore(int codiceE, String nome) {
 		this.codiceE = codiceE;
 		this.nome = nome;
@@ -30,4 +32,8 @@ public class Editore {
 		this.nome = nome;
 	}
 	
+	@Override
+	public String toString() {
+		return this.codiceE + " | " + this.nome;
+	}
 }

@@ -27,7 +27,7 @@ public class GenereDaoImpl implements GenereDao {
 			resultSet = statement.executeQuery("SELECT * FROM generi");
 			List<Genere> generi = new ArrayList<Genere>();
 			while(resultSet.next()) {
-				generi.add(new Genere(resultSet.getInt(1), resultSet.getString(2)));
+				generi.add(new Genere(resultSet.getInt("codiceG"), resultSet.getString("descrizione")));
 			}
 			return generi;
 		}
@@ -37,21 +37,22 @@ public class GenereDaoImpl implements GenereDao {
 			return null;
 		}
 		finally {
-			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			if(resultSet != null) try {resultSet.close();} catch (SQLException e) {logger.error(e.getMessage());}
+			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			DBHandler.getInstance().chiudiConnessione();
 		}
 	}
 
 	@Override
 	public Genere getById(int codiceG) {
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			statement = DBHandler.getInstance().getConnessione().createStatement();
-			resultSet = statement.executeQuery("SELECT * FROM generi WHERE codiceG = " + codiceG);
+			statement = DBHandler.getInstance().getConnessione().prepareStatement("SELECT * FROM generi WHERE codiceG = ?");
+			statement.setInt(1, codiceG);
+			resultSet = statement.executeQuery();
 			if(resultSet.next())
-				return new Genere(resultSet.getInt(1), resultSet.getString(2));
+				return new Genere(resultSet.getInt("codiceG"), resultSet.getString("descrizione"));
 			return null;
 		}
 		catch (SQLException e) {
@@ -60,8 +61,8 @@ public class GenereDaoImpl implements GenereDao {
 			return null;
 		}
 		finally {
-			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			if(resultSet != null) try {resultSet.close();} catch (SQLException e) {logger.error(e.getMessage());}
+			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			DBHandler.getInstance().chiudiConnessione();
 		}
 	}
@@ -69,13 +70,14 @@ public class GenereDaoImpl implements GenereDao {
 	@Override
 	public void insert(Genere genere) {
 		PreparedStatement statement = null;
+		ResultSet generatedKeys = null;
 		try {
 			statement = DBHandler.getInstance().getConnessione().prepareStatement(
 					"INSERT INTO generi (descrizione) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, genere.getDescrizione());
 			int n = statement.executeUpdate();
 			if(n != 0) {
-				ResultSet generatedKeys = statement.getGeneratedKeys();
+				generatedKeys = statement.getGeneratedKeys();
 				generatedKeys.next();
 				genere.setCodiceG(generatedKeys.getInt(1));
 				logger.debug("inserito nella tabella \"generi\" il record: " + genere.getCodiceG() + ", " + genere.getDescrizione());
@@ -87,6 +89,7 @@ public class GenereDaoImpl implements GenereDao {
 			System.out.println(ERRORE);
 		}
 		finally {
+			if(generatedKeys != null) try {generatedKeys.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			DBHandler.getInstance().chiudiConnessione();
 		}
@@ -102,8 +105,8 @@ public class GenereDaoImpl implements GenereDao {
 			statement.setInt(2, genere.getCodiceG());
 			int n = statement.executeUpdate();
 			if(n != 0) {
-				logger.debug("aggiornato nella tabella \"generi\" il record con codiceG : " + genere.getCodiceG());
-				System.out.println("Aggiornata descrizione genere con codiceG " + genere.getCodiceG() + " in \"" + genere.getDescrizione() + "\"");
+				logger.debug("aggiornato nella tabella \"generi\" il campo 'descrizione' del record con codiceG : " + genere.getCodiceG() + " in: \"" + genere.getDescrizione());
+				System.out.println("Aggiornata la descrizione del genere con codiceG [" + genere.getCodiceG() + "] in \"" + genere.getDescrizione() + "\"");
 			}
 		}
 		catch (SQLException e) {
@@ -118,13 +121,15 @@ public class GenereDaoImpl implements GenereDao {
 	
 	@Override
 	public void deleteById(int codiceG) {
-		Statement statement = null;
+		PreparedStatement statement = null;
 		try {
-			statement = DBHandler.getInstance().getConnessione().createStatement();
-			int n = statement.executeUpdate("DELETE FROM generi WHERE codiceG = " + codiceG);
+			statement = DBHandler.getInstance().getConnessione().prepareStatement(
+					"DELETE FROM generi WHERE codiceG = ?");
+			statement.setInt(1, codiceG);
+			int n = statement.executeUpdate();
 			if(n != 0) {
 				logger.debug("rimosso dalla tabella \"generi\" il record con codiceG: " + codiceG);
-				System.out.println("Rimosso genere con codiceG " + codiceG);
+				System.out.println("Rimosso genere con codiceG [" + codiceG + "]");
 			}
 		}
 		catch (SQLException e) {

@@ -10,6 +10,8 @@ public interface LibroDao {
 
 	public Libro getById(int codiceL);
 	
+	public Libro getByIdWithDetails(int codiceL);
+	
 	public void insert(Libro libro);
 	
 	public void deleteById(int codiceL);

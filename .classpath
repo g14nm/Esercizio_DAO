@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="C:/Users/gianm/Desktop/Betacom/javalib/iText-Core-8.0.1-only-jars/layout-8.0.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/gianm/Desktop/Betacom/javalib/slf4j-api-2.0.9.jar"/>
 	<classpathentry kind="lib" path="C:/Users/gianm/Desktop/Betacom/javalib/slf4j-simple-2.0.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/gianm/Desktop/Betacom/javalib/opencsv-5.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

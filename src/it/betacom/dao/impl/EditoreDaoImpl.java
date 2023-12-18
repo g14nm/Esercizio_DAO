@@ -27,7 +27,7 @@ public class EditoreDaoImpl implements EditoreDao {
 			resultSet = statement.executeQuery("SELECT * FROM editori");
 			List<Editore> editori = new ArrayList<Editore>();
 			while(resultSet.next()) {
-				editori.add(new Editore(resultSet.getInt(1), resultSet.getString(2)));
+				editori.add(new Editore(resultSet.getInt("codiceE"), resultSet.getString("nome")));
 			}
 			return editori;
 		}
@@ -37,21 +37,22 @@ public class EditoreDaoImpl implements EditoreDao {
 			return null;
 		}
 		finally {
-			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			if(resultSet != null) try {resultSet.close();} catch (SQLException e) {logger.error(e.getMessage());}
+			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			DBHandler.getInstance().chiudiConnessione();
 		}
 	}
 
 	@Override
 	public Editore getById(int codiceE) {
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			statement = DBHandler.getInstance().getConnessione().createStatement();
-			resultSet = statement.executeQuery("SELECT * FROM editori WHERE codiceE = " + codiceE);
+			statement = DBHandler.getInstance().getConnessione().prepareStatement("SELECT * FROM editori WHERE codiceE = ?");
+			statement.setInt(1, codiceE);
+			resultSet = statement.executeQuery();
 			if(resultSet.next())
-				return new Editore(resultSet.getInt(1), resultSet.getString(2));
+				return new Editore(resultSet.getInt("codiceE"), resultSet.getString("nome"));
 			return null;
 		}
 		catch (SQLException e) {
@@ -60,8 +61,8 @@ public class EditoreDaoImpl implements EditoreDao {
 			return null;
 		}
 		finally {
-			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			if(resultSet != null) try {resultSet.close();} catch (SQLException e) {logger.error(e.getMessage());}
+			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			DBHandler.getInstance().chiudiConnessione();
 		}
 	}
@@ -69,13 +70,14 @@ public class EditoreDaoImpl implements EditoreDao {
 	@Override
 	public void insert(Editore editore) {
 		PreparedStatement statement = null;
+		ResultSet generatedKeys = null;
 		try {
 			statement = DBHandler.getInstance().getConnessione().prepareStatement(
 					"INSERT INTO editori (nome) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, editore.getNome());
 			int n = statement.executeUpdate();
 			if(n != 0) {
-				ResultSet generatedKeys = statement.getGeneratedKeys();
+				generatedKeys = statement.getGeneratedKeys();
 				generatedKeys.next();
 				editore.setCodiceE(generatedKeys.getInt(1));
 				logger.debug("inserito nella tabella \"editori\" il record: " + editore.getCodiceE() + ", " + editore.getNome());
@@ -87,6 +89,7 @@ public class EditoreDaoImpl implements EditoreDao {
 			System.out.println(ERRORE);
 		}
 		finally {
+			if(generatedKeys != null) try {generatedKeys.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			if(statement != null) try {statement.close();} catch (SQLException e) {logger.error(e.getMessage());}
 			DBHandler.getInstance().chiudiConnessione();
 		}
@@ -102,8 +105,8 @@ public class EditoreDaoImpl implements EditoreDao {
 			statement.setInt(2, editore.getCodiceE());
 			int n = statement.executeUpdate();
 			if(n != 0) {
-				logger.debug("aggiornato nella tabella \"editori\" il record con codiceE : " + editore.getCodiceE());
-				System.out.println("Aggiornato nome editore con codiceE " + editore.getCodiceE() + " in \"" + editore.getNome() + "\"");
+				logger.debug("aggiornato nella tabella \"editori\" il campo 'nome' del record con codiceE : " + editore.getCodiceE() + " in: \"" + editore.getNome());
+				System.out.println("Aggiornato il nome dell'editore con codiceE [" + editore.getCodiceE() + "] in \"" + editore.getNome() + "\"");
 			}
 		}
 		catch (SQLException e) {
@@ -118,13 +121,15 @@ public class EditoreDaoImpl implements EditoreDao {
 	
 	@Override
 	public void deleteById(int codiceE) {
-		Statement statement = null;
+		PreparedStatement statement = null;
 		try {
-			statement = DBHandler.getInstance().getConnessione().createStatement();
-			int n = statement.executeUpdate("DELETE FROM editori WHERE codiceE = " + codiceE);
+			statement = DBHandler.getInstance().getConnessione().prepareStatement(
+					"DELETE FROM editori WHERE codiceE = ?");
+			statement.setInt(1, codiceE);
+			int n = statement.executeUpdate();
 			if(n != 0) {
 				logger.debug("rimosso dalla tabella \"editori\" il record con codiceE: " + codiceE);
-				System.out.println("Rimosso editore con codiceE " + codiceE);
+				System.out.println("Rimosso editore con codiceE [" + codiceE + "]");
 			}
 		}
 		catch (SQLException e) {

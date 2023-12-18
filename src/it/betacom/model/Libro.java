@@ -2,36 +2,35 @@ package it.betacom.model;
 
 public class Libro {
 	
-	private int codiceL, numPag, anno, codiceA, codiceG, codiceE;
+	private int codiceL, numeroPagine, anno, codiceA, codiceG, codiceE;
 	private String titolo, nomeAutore, cognomeAutore, genere, editore;
-	
-	public Libro() {};
 
-	//costruttore per inserimento nel db
+	//costruttore senza id per inserimento nel db e con l'inserimento degli id di autore, genere ed editore
 	public Libro(String titolo, int numPag, int anno, int codiceA, int codiceG, int codiceE) {
 		this.titolo = titolo;
-		this.numPag = numPag;
+		this.numeroPagine = numPag;
 		this.anno = anno;
 		this.codiceA = codiceA;
 		this.codiceG = codiceG;
 		this.codiceE = codiceE;
 	}
-	
-	//costruttori per l'estrazione dal db
+
+	//costruttore per l'estrazione dal db con id del libro e gli id di autore, genere ed editore
 	public Libro(int codiceL, String titolo, int numPag, int anno, int codiceA, int codiceG, int codiceE) {
 		this.codiceL = codiceL;
 		this.titolo = titolo;
-		this.numPag = numPag;
+		this.numeroPagine = numPag;
 		this.anno = anno;
 		this.codiceA = codiceA;
 		this.codiceG = codiceG;
 		this.codiceE = codiceE;
 	}
 	
+	//costruttore per l'estrazione dal db con id e dettagli di autore, genere ed editore
 	public Libro(int codiceL, String titolo, int numPag, int anno, String nomeAutore, String cognomeAutore, String genere, String editore) {
 		this.codiceL = codiceL;
 		this.titolo = titolo;
-		this.numPag = numPag;
+		this.numeroPagine = numPag;
 		this.anno = anno;
 		this.nomeAutore = nomeAutore;
 		this.cognomeAutore = cognomeAutore;
@@ -47,12 +46,12 @@ public class Libro {
 		this.codiceL = codiceL;
 	}
 
-	public int getNumPag() {
-		return numPag;
+	public int getNumeroPagine() {
+		return numeroPagine;
 	}
 
-	public void setNumPag(int numPag) {
-		this.numPag = numPag;
+	public void setNumeroPagine(int numeroPagine) {
+		this.numeroPagine = numeroPagine;
 	}
 
 	public int getAnno() {
@@ -129,7 +128,26 @@ public class Libro {
 
 	@Override
 	public String toString() {
-		return "codiceL : " + this.codiceL + " | titolo : " + this.titolo + " | numero pagine : " + this.numPag + " | anno : " + this.anno + " | autore : " + this.nomeAutore + " " + this.cognomeAutore + " | genere : " + this.genere+ " | editore : " + this.editore;
+		return
+				this.codiceL + " | "
+				+ this.titolo + " | "
+				+ this.anno + " | "
+				+ this.genere + " | "
+				+ this.nomeAutore + " " + this.cognomeAutore + " | "
+				+ this.numeroPagine + " pagine | "
+				+ this.editore;
+	}
+	
+	public String details() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("codiceL: ").append(this.codiceL).append("\n");
+		sb.append("Titolo: ").append(this.titolo).append("\n");
+		sb.append("Numero pagine: ").append(this.numeroPagine).append("\n");
+		sb.append("Anno: ").append(this.anno).append("\n");
+		sb.append("Autore: ").append(this.nomeAutore).append(" ").append(this.cognomeAutore).append("\n");
+		sb.append("Genere: ").append(this.genere).append("\n");
+		sb.append("Editore: ").append(this.editore);
+		return sb.toString();
 	}
 	
 }
